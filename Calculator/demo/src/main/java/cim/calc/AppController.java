@@ -1,14 +1,11 @@
 package cim.calc;
 
-import java.util.Arrays;
-
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.Scene;
 
 public class AppController {
     //get all the fxml from Calc.fxml
@@ -69,7 +66,6 @@ public class AppController {
     private TextField expressionField;
 
     private Operations operations = new Operations();
-
     
     // implement a initialize function
     @FXML
@@ -166,21 +162,87 @@ public class AppController {
         });
     }
 
+    public EventHandler<KeyEvent> setKeyActions() {
+        return (event) -> {
+            System.out.println(event.getCode().toString());
+            // event (KeyEvent).getCode() returns a KeyCode which is the actual KeyPress.
+            // Its an enum, so in switch we just need its value (unqualified expression), rather than the
+            // full declaration (qualified expression).
+            switch (event.getCode()) {
+                case NUMPAD1:
+                    oneButton.fire();
+                    break;
+                case NUMPAD2:
+                    twoButton.fire();
+                    break;
+                case NUMPAD3:
+                    threeButton.fire();
+                    break;
+                case NUMPAD4:
+                    fourButton.fire();
+                    break;
+                case NUMPAD5:
+                    fiveButton.fire();
+                    break;
+                case NUMPAD6:
+                    sixButton.fire();
+                    break;
+                case NUMPAD7:
+                    sevenButton.fire();
+                    break;
+                case NUMPAD8:
+                    eightButton.fire();
+                    break;
+                case NUMPAD9:
+                    nineButton.fire();
+                    break;
+                case NUMPAD0:
+                    zeroButton.fire();
+                    break;
+                case ADD:
+                    addButton.fire();
+                    break;
+                case SUBTRACT:
+                    subtractButton.fire();
+                    break;
+                case MULTIPLY:
+                    multiplyButton.fire();
+                    break;
+                case DIVIDE:
+                    divideButton.fire();
+                    break;
+                case ENTER:
+                    equalButton.fire();
+                    break;
+                case BACK_SPACE:
+                    deleteChar();
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
+
     public void putButtonTextToResultField(ActionEvent event) {
         String buttonText = ((Button) event.getSource()).getText(); // get the text from the button
         resultField.setText(String.format("%s%s", resultField.getText(), buttonText)); // put the text to the resultField
     }
 
     public boolean checkIfExpressionHasTwoNumbers(String expression) {
-        String[] numbers = expression.split("[\\+\\-\\*\\/]");
+        String[] numbers = expression.split("[\\+\\-\\*\\/]"); // split the expression in one of the operators
         if(numbers.length == 1) {
-            return false;
+            return false;   // We return false to avoid crashes.
         }
 
         return true;
     }
 
     public boolean checkIfOperatorExistsAtEnd(String expression) {
+        /*
+         * This is needed to avoid crashes as we always run the operation once a new operation is detected.
+         * Which results in a crash if the last character is an operator.
+         */
+
         // substring starts with the given index all the way to the end of the String.
         String lastChar = expression.substring(expression.length() - 1);
         if(lastChar.matches("[\\+\\-\\*\\/\\.]")) {
@@ -190,7 +252,13 @@ public class AppController {
         return false;
     }
 
-
+    public void deleteChar() {
+        String expression = resultField.getText();
+        if(expression.length() > 0) {
+            expression = expression.substring(0, expression.length() - 1);
+            resultField.setText(expression);
+        }
+    }
 
 
 
