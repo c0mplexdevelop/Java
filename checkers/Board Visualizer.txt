@@ -1,0 +1,40 @@
+00 xx 01 xx 02 xx 03 xx
+xx 10 xx 11 xx 12 xx 13
+20 xx 21 xx 22 xx 23 xx
+xx 30 xx 31 xx 32 xx 33
+40 xx 41 xx 42 xx 43 xx
+xx 50 xx 51 xx 52 xx 53
+60 xx 61 xx 62 xx 63 xx
+xx 70 xx 71 xx 72 xx 73
+
+WHITE PIECE:
+    MOVEMENT:
+    if row % 2 == 0:
+    moving left is row + 1 and col - 1, if col is 0, invalid move.
+    moving right is row + 1 and col, if col is 3, invalid move.
+
+    if row % 2 == 1:
+    moving left is row + 1 and col
+    moving right is row+1 and col + 1, if col is 3, invalid move.
+
+    EATING:
+    if row % 2 == 0:
+    eating left is:
+        check for row+1 and col-1 if there is a piece. if there is let x be row+1 and y be col -1:
+            check if x+1 and y is empty. Then if empty, transfer piece there. 
+            This part is because row now is odd, so apply the left principle for odd rows.
+    eating right is:
+        check for row+1 and col if there is a piece. if there is let x be row+1 and y be col:
+            check if x+1 and y+1 is empty. Then if empty, transfer piece there. 
+            This part is because row now is odd, so apply the right principle for odd rows.
+
+    if row % 2 == 1:
+    eating left is:
+        check for row+1 and col if there is a piece. if there is let x be row+1 and y be col:
+            check if x+1 and y-1 is empty. Then if empty, transfer piece there. 
+            This part is because row now is even, so apply the left principle for even rows.
+
+    eating right is:
+        check for row+1 and col+1 if there is a piece. if there is let x be row+1 and y be col+1:
+            check if x+1 and y is empty. Then if empty, transfer piece there. 
+            This part is because row now is even, so apply the right principle for even rows.
