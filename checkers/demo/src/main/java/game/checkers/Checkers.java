@@ -12,12 +12,11 @@ public class Checkers {
     }
 
 
-
     public void print(Object str) {
         System.out.println(str);
     }
 
-    public static void main(String[] args) throws InvalidPositionException{
+    public static void main(String[] args) throws InvalidPositionException {
         Checkers game = new Checkers();
         Scanner scanner = new Scanner(System.in);
         sprint(Arrays.deepToString(game.board));
@@ -43,7 +42,7 @@ public class Checkers {
         return board;
     }
 
-    public void showBoard() {
+    private void showBoard() {
         int count = 0;
         for (int row = 0; row < 8; row++) {
             if (row == 3 || row == 4) {
@@ -64,17 +63,7 @@ public class Checkers {
         }
     }
 
-    public boolean checkIfPositionIsValid(Piece piece, int row, int col) {
-        if (piece.getRow() % 2 != 0) {
-            if (board[row][col] != null) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean checkIfPositionIsEmpty(int row, int col) {
+    final boolean checkIfPositionIsEmpty(int row, int col) {
         if(board[row][col] == null) {
             return true;
         };
@@ -82,11 +71,11 @@ public class Checkers {
         return false;
     }
 
-    private Piece getPiece(int row, int col) {
+    final Piece getPiece(int row, int col) {
         return board[row][col];
     }
 
-    private boolean checkIfMovable(int pieceRow, int pieceCol) {
+    final boolean checkIfMovable(int pieceRow, int pieceCol) {
         for(int checkingRow = pieceRow - 1; checkingRow <= pieceRow + 1 ; checkingRow++) {
             for(int checkingCol = pieceCol - 1; checkingCol < pieceCol + 1; checkingCol++) {
                 if(checkingRow == pieceRow) continue;
@@ -124,9 +113,9 @@ public class Checkers {
         return new int[] {arrayRow, arrayCol};
     }
 
-    private void validateUserInput(int input) throws InvalidPositionException {
+    final void validateUserInput(int input) throws InvalidPositionException {
         if(input < 1 || input > 8) {
-            throw new InvalidPositionException(String.format("The row \"%d\" is invalid", input));
+            throw new InvalidPositionException(String.format("The input \"%d\" is invalid", input));
         }
     }
 }
