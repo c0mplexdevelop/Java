@@ -34,7 +34,11 @@ class TestCheckers {
         InvalidPositionException belowOneException = assertThrows(InvalidPositionException.class, () -> game.validateUserInput(0));
         System.out.println(belowOneException.getMessage());
         assertEquals(belowOneExceptMessage, belowOneException.getMessage());
+    }
 
+    @Test
+    void testValidateUserInputAboveEight() {
+        Checkers game = new Checkers();
         String aboveEightExceptMessage = "The input \"9\" is invalid";
         InvalidPositionException aboveEightException = assertThrows(InvalidPositionException.class, () -> {
             game.validateUserInput(9);
