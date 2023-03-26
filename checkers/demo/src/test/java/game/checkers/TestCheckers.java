@@ -6,8 +6,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Scanner;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,13 +31,17 @@ class TestCheckers {
     }
 
     @Test
-    void testValidateUserInput() {
+    void testValidateUserInputBelowOne() {
         Checkers game = new Checkers();
         String belowOneExceptMessage = "The input \"0\" is invalid";
         InvalidPositionException belowOneException = assertThrows(InvalidPositionException.class, () -> game.validateUserInput(0));
         System.out.println(belowOneException.getMessage());
         assertEquals(belowOneExceptMessage, belowOneException.getMessage());
+    }
 
+    @Test
+    void testValidatingUserInputAboveEight() {
+        Checkers game = new Checkers();
         String aboveEightExceptMessage = "The input \"9\" is invalid";
         InvalidPositionException aboveEightException = assertThrows(InvalidPositionException.class, () -> {
             game.validateUserInput(9);
@@ -43,16 +50,13 @@ class TestCheckers {
     }
 
     @Test
-    void testGetInput() {
+    void testGetInput() throws InvalidPositionException {
         Checkers game = new Checkers();
         /*
-         * We backup the current Sys.in, then we would set the ByteIS as System.in
-         * to simulate user Input, then restore the original Sys in
-         */
+         *
+        */
         ByteArrayInputStream simulatedInputStream = new ByteArrayInputStream("2 2".getBytes());
         Scanner scanner = new Scanner(simulatedInputStream);
-        
-
-        scanner.tokens().forEach(System.out::println);
+        assertArrayEquals(new int[] {1,1}, game.getInput(scanner));
     }
 }

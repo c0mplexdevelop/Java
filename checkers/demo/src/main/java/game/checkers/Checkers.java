@@ -21,7 +21,8 @@ public class Checkers {
         Scanner scanner = new Scanner(System.in);
         sprint(Arrays.deepToString(game.board));
         game.showBoard();
-        game.getInput(scanner);
+        int[] position = game.getInput(scanner);
+
     }
 
     private final Piece[][] createBoard() {
@@ -98,14 +99,12 @@ public class Checkers {
         return false; // Immovable
     }
 
-    private int[] getInput(Scanner scanner) throws InvalidPositionException {
+    int[] getInput(Scanner scanner) throws InvalidPositionException {
         System.out.print("Input your row: ");
         int inputtedRow = scanner.nextInt();
-        validateUserInput(inputtedRow);
 
         System.out.print("Input your col: ");
         int inputtedCol = scanner.nextInt();
-        validateUserInput(inputtedCol);
 
         int arrayRow = inputtedRow - 1;
         int arrayCol = inputtedCol - 1;
@@ -113,9 +112,11 @@ public class Checkers {
         return new int[] {arrayRow, arrayCol};
     }
 
-    final void validateUserInput(int input) throws InvalidPositionException {
-        if(input < 1 || input > 8) {
-            throw new InvalidPositionException(String.format("The input \"%d\" is invalid", input));
+    final void validateUserInput(int[] input) throws InvalidPositionException {
+        for(int position : input) {
+            if (position < 1 || position > 8) {
+                throw new InvalidPositionException(String.format("The input \"%d\" is invalid", input));
+            }
         }
     }
 }
