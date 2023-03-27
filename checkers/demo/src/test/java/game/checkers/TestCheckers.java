@@ -6,8 +6,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Scanner;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,10 +31,11 @@ class TestCheckers {
     }
 
     @Test
-    void testValidateUserInput() {
+    void testValidateUserInputBelowOne() {
         Checkers game = new Checkers();
+        int[] position = {0,0};
         String belowOneExceptMessage = "The input \"0\" is invalid";
-        InvalidPositionException belowOneException = assertThrows(InvalidPositionException.class, () -> game.validateUserInput(0));
+        InvalidPositionException belowOneException = assertThrows(InvalidPositionException.class, () -> game.validateUserInput(position));
         System.out.println(belowOneException.getMessage());
         assertEquals(belowOneExceptMessage, belowOneException.getMessage());
     }
@@ -39,24 +43,63 @@ class TestCheckers {
     @Test
     void testValidateUserInputAboveEight() {
         Checkers game = new Checkers();
+        int[] position = {9,9};
         String aboveEightExceptMessage = "The input \"9\" is invalid";
         InvalidPositionException aboveEightException = assertThrows(InvalidPositionException.class, () -> {
-            game.validateUserInput(9);
+            game.validateUserInput(position);
         });
         assertEquals(aboveEightExceptMessage, aboveEightException.getMessage());
     }
 
     @Test
-    void testGetInput() {
+    void testGetPieceInput() throws InvalidPositionException {
         Checkers game = new Checkers();
-        /*
-         * We backup the current Sys.in, then we would set the ByteIS as System.in
-         * to simulate user Input, then restore the original Sys in
-         */
         ByteArrayInputStream simulatedInputStream = new ByteArrayInputStream("2 2".getBytes());
         Scanner scanner = new Scanner(simulatedInputStream);
-        
+        int[] result = game.getPieceInput(scanner);
+        assertArrayEquals(new int[] {2,2}, result);
+    }
 
-        scanner.tokens().forEach(System.out::println);
+    @Test
+    void testGetPieceReturnWhitePiece() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        /*
+         * We use reflection to check if the getPiece method 
+         * actually returns a Piece object.
+         */
+        Checkers game = new Checkers();
+        int[] position = {0,0};
+        Piece piece = game.getPiece(position);
+        /*
+         * The generic is a wildcard that extends the Checkers
+         * class as the return value of getClass is
+         * Class<? extends class>
+         */
+        Class<? extends Checkers> gameClass = game.getClass();
+
+        // Get the createBoard method and set that to accessible
+        // or not private.
+        Method gameCreateBoard = gameClass.getDeclaredMethod("createBoard");
+        gameCreateBoard.setAccessible(true);
+
+        // We invoke the method to get the board, get the piece, and
+        // use the implemented isEqual to check if they are the same
+        // WhitePiece Object.
+        Piece[][] gameBoard = (Piece[][])gameCreateBoard.invoke(game);
+        Piece actualPiece = gameBoard[0][0];
+        assertTrue(actualPiece.isEqual(piece));
+    }
+
+    @Test
+    void testGetPieceReturnBlackPiece() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        Checkers game = new Checkers();
+        int[] position = {7,3};
+        Piece piece = game.getPiece(position);
+        Class<? extends Checkers> gameClass = game.getClass();
+        Method gameCreateBoard = gameClass.getDeclaredMethod("createBoard");
+        gameCreateBoard.setAccessible(true);
+        Piece[][] gameBoard = (Piece[][]) gameCreateBoard.invoke(game);
+        Piece actualPiece = gameBoard[7][3];
+        assertTrue(actualPiece.isEqual(piece));
+
     }
 }
