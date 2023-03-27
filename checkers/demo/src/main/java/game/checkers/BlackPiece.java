@@ -53,4 +53,18 @@ public class BlackPiece implements Piece {
         }
         return "WP";
     }
+
+    public boolean isEqual(Piece piece) {
+        int pieceRow = piece.getRow();
+        int pieceCol = piece.getCol();
+        if(!(piece instanceof BlackPiece)) {
+            return false;
+        }
+
+        if(currentRow != pieceRow || currentCol != pieceCol) {
+            return false;
+        }
+
+        return true;
+    }
 }
