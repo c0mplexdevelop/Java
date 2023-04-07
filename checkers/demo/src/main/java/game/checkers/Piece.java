@@ -18,4 +18,6 @@ public interface Piece {
     public void moveDirectionAsKing(String direction, int spaces) throws InvalidPositionException;
 
     public boolean eatEnemyPiece(int row, int col);
+
+    public boolean isEqual(Piece piece);
 }

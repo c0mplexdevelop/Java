@@ -19,10 +19,15 @@ public class Checkers {
     public static void main(String[] args) throws InvalidPositionException {
         Checkers game = new Checkers();
         Scanner scanner = new Scanner(System.in);
-        sprint(Arrays.deepToString(game.board));
-        game.showBoard();
-        int[] position = game.getInput(scanner);
+        System.out.println(Arrays.deepToString(game.board));
+        while(true) {
+            Piece piece = game.handlePieceInput(scanner);
+            piece.moveDirection("left");
+            break;
+        }
 
+        game.showBoard();
+        
     }
 
     private final Piece[][] createBoard() {
@@ -64,7 +69,7 @@ public class Checkers {
         }
     }
 
-    final boolean checkIfPositionIsEmpty(int row, int col) {
+    protected final boolean checkIfPositionIsEmpty(int row, int col) {
         if(board[row][col] == null) {
             return true;
         };
@@ -72,11 +77,14 @@ public class Checkers {
         return false;
     }
 
-    final Piece getPiece(int row, int col) {
+    public final Piece getPiece(int[] position) {
+        int row = position[0];
+        int col = position[1];
+
         return board[row][col];
     }
 
-    final boolean checkIfMovable(int pieceRow, int pieceCol) {
+    public final boolean checkIfMovable(int pieceRow, int pieceCol) {
         for(int checkingRow = pieceRow - 1; checkingRow <= pieceRow + 1 ; checkingRow++) {
             for(int checkingCol = pieceCol - 1; checkingCol < pieceCol + 1; checkingCol++) {
                 if(checkingRow == pieceRow) continue;
@@ -99,25 +107,53 @@ public class Checkers {
         return false; // Immovable
     }
 
-    int[] getInput(Scanner scanner) throws InvalidPositionException {
+    public int[] getPieceInput(Scanner scanner) {
         System.out.print("Input your row: ");
         int inputtedRow = scanner.nextInt();
 
         System.out.print("Input your col: ");
         int inputtedCol = scanner.nextInt();
 
-        int arrayRow = inputtedRow - 1;
-        int arrayCol = inputtedCol - 1;
-
-        return new int[] {arrayRow, arrayCol};
+        return new int[] {inputtedRow, inputtedCol};
     }
 
-    final void validateUserInput(int[] input) throws InvalidPositionException {
+    public Piece handlePieceInput(Scanner scanner) {
+        Piece piece = null;
+        boolean validPosition = false;
+        while(!validPosition) {
+            showBoard();
+            int[] position = getPieceInput(scanner);
+            try {
+                validateUserInput(position);
+            } catch (InvalidPositionException exception) {
+                System.out.println(exception.getMessage());
+                continue;
+            }
+            
+            position = turnInputToArrayIndex(position);
+            System.out.println(Arrays.toString(position));
+            piece = getPiece(position);
+            validPosition = true;
+        }
+        
+        return piece;
+    }
+
+    protected final void validateUserInput(int[] input) throws InvalidPositionException {
         for(int position : input) {
-            if (position < 1 || position > 8) {
-                throw new InvalidPositionException(String.format("The input \"%d\" is invalid", input));
+            if(position < 1 || position > 8) {
+                throw new InvalidPositionException(String.format("The input \"%d\" is invalid", position));
             }
         }
+    }
+
+    private int[] turnInputToArrayIndex(int[] position) {
+        int[] convertedPosition = new int[2];
+        for(int idx = 0; idx < position.length; idx++) {
+            convertedPosition[idx] = position[idx] - 1;
+        }
+
+        return convertedPosition;
     }
 }
 

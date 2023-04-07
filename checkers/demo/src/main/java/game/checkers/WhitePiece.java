@@ -69,4 +69,19 @@ public class WhitePiece implements Piece {
         }
         return "BP";
     }
+
+    public boolean isEqual(Piece piece) {
+        int pieceRow = piece.getRow();
+        int pieceCol = piece.getCol();
+
+        if(!(piece instanceof WhitePiece)) {
+            return false;
+        }
+
+        if(currentRow != pieceRow || currentCol != pieceCol) {
+            return false;
+        }
+
+        return true;
+    }
 }
