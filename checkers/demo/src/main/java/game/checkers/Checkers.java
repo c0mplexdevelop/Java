@@ -22,12 +22,11 @@ public class Checkers {
         System.out.println(Arrays.deepToString(game.board));
         while(true) {
             Piece piece = game.handlePieceInput(scanner);
-            piece.moveDirection("left");
             break;
         }
 
         game.showBoard();
-        
+
     }
 
     private final Piece[][] createBoard() {
@@ -58,8 +57,8 @@ public class Checkers {
             }
 
             if (row % 2 != 0) {
-                System.out.print(String.format("|  |%s|  |%s|  |%s|  |%s|\n", board[count][0], board[count][1],
-                        board[count][2], board[count][3]));
+                System.out.printf("|  |%s|  |%s|  |%s|  |%s|\n", board[count][0], board[count][1],
+                        board[count][2], board[count][3]);
             } else {
                 System.out.print(String.format("|%s|  |%s|  |%s|  |%s|  |\n", board[count][0], board[count][1],
                         board[count][2], board[count][3]));
@@ -129,13 +128,13 @@ public class Checkers {
                 System.out.println(exception.getMessage());
                 continue;
             }
-            
+
             position = turnInputToArrayIndex(position);
             System.out.println(Arrays.toString(position));
             piece = getPiece(position);
             validPosition = true;
         }
-        
+
         return piece;
     }
 

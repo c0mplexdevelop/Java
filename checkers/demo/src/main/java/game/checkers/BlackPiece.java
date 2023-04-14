@@ -30,22 +30,6 @@ public class BlackPiece implements Piece {
         this.king = bool;
     }
 
-    public void move(int row, int col) {
-        return;
-    }
-
-    public void moveDirection(String direction) {
-        return;
-    }
-
-    public void moveDirectionAsKing(String direction, int spaces) {
-        return;
-    }
-
-    public boolean eatEnemyPiece(int row, int col) {
-        return false;
-    }
-
     @Override
     public String toString() {
         if (king) {
@@ -61,10 +45,6 @@ public class BlackPiece implements Piece {
             return false;
         }
 
-        if(currentRow != pieceRow || currentCol != pieceCol) {
-            return false;
-        }
-
-        return true;
+        return currentRow == pieceRow && currentCol == pieceCol;
     }
 }
