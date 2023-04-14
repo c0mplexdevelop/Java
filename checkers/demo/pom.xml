@@ -98,20 +98,20 @@
         <version>${jacoco-maven-plugin.version}</version>
         <executions>
           <execution>
-            <id>pre-unit-test</id>
+            <id>pre-unit-sqltest</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
           </execution>
           <execution>
-            <id>post-unit-test</id>
+            <id>post-unit-sqltest</id>
             <phase>test</phase>
             <goals>
               <goal>report</goal>
             </goals>
           </execution>
           <execution>
-            <id>check-unit-test</id>
+            <id>check-unit-sqltest</id>
             <phase>test</phase>
             <goals>
               <goal>check</goal>
